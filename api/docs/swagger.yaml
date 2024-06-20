@@ -1,0 +1,1004 @@
+definitions:
+  library_service.Author:
+    properties:
+      biography:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  library_service.AuthorCreateReq:
+    properties:
+      biography:
+        type: string
+      name:
+        type: string
+    type: object
+  library_service.AuthorGetAllRes:
+    properties:
+      Authors:
+        items:
+          $ref: '#/definitions/library_service.AuthorRes'
+        type: array
+    type: object
+  library_service.AuthorRes:
+    properties:
+      biography:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  library_service.BookCreateReq:
+    properties:
+      author_id:
+        type: string
+      genre_id:
+        type: string
+      summary:
+        type: string
+      title:
+        type: string
+    type: object
+  library_service.BookGetAllRes:
+    properties:
+      books:
+        items:
+          $ref: '#/definitions/library_service.BookRes'
+        type: array
+    type: object
+  library_service.BookRes:
+    properties:
+      author:
+        $ref: '#/definitions/library_service.Author'
+      genre:
+        $ref: '#/definitions/library_service.Genre'
+      id:
+        type: string
+      summary:
+        type: string
+      title:
+        type: string
+    type: object
+  library_service.BorrowedBooksRes:
+    properties:
+      books:
+        items:
+          $ref: '#/definitions/library_service.BookRes'
+        type: array
+    type: object
+  library_service.BorrowerCreateReq:
+    properties:
+      book_id:
+        type: string
+      user_id:
+        type: string
+    type: object
+  library_service.BorrowerGetAllRes:
+    properties:
+      Borrowers:
+        items:
+          $ref: '#/definitions/library_service.BorrowerRes'
+        type: array
+    type: object
+  library_service.BorrowerRes:
+    properties:
+      book:
+        $ref: '#/definitions/library_service.BookRes'
+      borrow_date:
+        type: string
+      id:
+        type: string
+      return_date:
+        type: string
+      user:
+        $ref: '#/definitions/library_service.User'
+    type: object
+  library_service.BorrowerUpdate:
+    properties:
+      book_id:
+        type: string
+      borrow_date:
+        type: string
+      return_date:
+        type: string
+      user_id:
+        type: string
+    type: object
+  library_service.Genre:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  library_service.GenreCreateReq:
+    properties:
+      name:
+        type: string
+    type: object
+  library_service.GenreGetAllRes:
+    properties:
+      Genres:
+        items:
+          $ref: '#/definitions/library_service.GenreRes'
+        type: array
+    type: object
+  library_service.GenreRes:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  library_service.User:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /authors:
+    get:
+      consumes:
+      - application/json
+      description: Get all author items
+      parameters:
+      - description: Name
+        in: query
+        name: name
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.AuthorGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all author items
+      tags:
+      - Author
+    post:
+      consumes:
+      - application/json
+      description: Create a new author item
+      parameters:
+      - description: Author data
+        in: body
+        name: author
+        required: true
+        schema:
+          $ref: '#/definitions/library_service.AuthorCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.AuthorRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create author item
+      tags:
+      - Author
+  /authors/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an author item by ID
+      parameters:
+      - description: Author ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Author item deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid menu item ID
+          schema:
+            type: string
+        "404":
+          description: Menu item not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete menu author
+      tags:
+      - Author
+    get:
+      consumes:
+      - application/json
+      description: Get an author item by ID
+      parameters:
+      - description: Author ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.AuthorRes'
+        "400":
+          description: Invalid menu item ID
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get author item
+      tags:
+      - Author
+    put:
+      consumes:
+      - application/json
+      description: Update an existing author item
+      parameters:
+      - description: Author ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated author item data
+        in: body
+        name: menu
+        required: true
+        schema:
+          $ref: '#/definitions/library_service.AuthorCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.AuthorRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Menu item not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update author item
+      tags:
+      - Author
+  /books:
+    get:
+      consumes:
+      - application/json
+      description: Get all book items
+      parameters:
+      - description: author_id
+        in: query
+        name: author_id
+        type: string
+      - description: genre_id
+        in: query
+        name: genre_id
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BookGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all book items
+      tags:
+      - Book
+    post:
+      consumes:
+      - application/json
+      description: Create a new book item
+      parameters:
+      - description: Book data
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/library_service.BookCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BookRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create book item
+      tags:
+      - Book
+  /books/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an book item by ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Book item deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid menu item ID
+          schema:
+            type: string
+        "404":
+          description: Menu item not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete menu book
+      tags:
+      - Book
+    get:
+      consumes:
+      - application/json
+      description: Get an book item by ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BookRes'
+        "400":
+          description: Invalid menu item ID
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get book item
+      tags:
+      - Book
+    put:
+      consumes:
+      - application/json
+      description: Update an existing book item
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated book item data
+        in: body
+        name: menu
+        required: true
+        schema:
+          $ref: '#/definitions/library_service.BookCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BookRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Menu item not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update book item
+      tags:
+      - Book
+  /books/search:
+    get:
+      consumes:
+      - application/json
+      description: Search book items
+      parameters:
+      - description: title
+        in: query
+        name: title
+        type: string
+      - description: author
+        in: query
+        name: author
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BookGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Search book items
+      tags:
+      - Book
+  /borrowers:
+    get:
+      consumes:
+      - application/json
+      description: Get all borrower items
+      parameters:
+      - description: user_id
+        in: query
+        name: user_id
+        type: string
+      - description: book_id
+        in: query
+        name: book_id
+        type: string
+      - description: borrow_date
+        in: query
+        name: borrow_date
+        type: string
+      - description: return_date
+        in: query
+        name: return_date
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BorrowerGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all borrower items
+      tags:
+      - Borrower
+    post:
+      consumes:
+      - application/json
+      description: Create a new borrower item
+      parameters:
+      - description: Borrower data
+        in: body
+        name: borrower
+        required: true
+        schema:
+          $ref: '#/definitions/library_service.BorrowerCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BorrowerRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create borrower item
+      tags:
+      - Borrower
+  /borrowers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an borrower item by ID
+      parameters:
+      - description: Borrower ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Borrower item deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid menu item ID
+          schema:
+            type: string
+        "404":
+          description: Menu item not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete menu borrower
+      tags:
+      - Borrower
+    get:
+      consumes:
+      - application/json
+      description: Get an borrower item by ID
+      parameters:
+      - description: Borrower ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BorrowerRes'
+        "400":
+          description: Invalid menu item ID
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get borrower item
+      tags:
+      - Borrower
+    put:
+      consumes:
+      - application/json
+      description: Update an existing borrower item
+      parameters:
+      - description: Borrower ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated borrower item data
+        in: body
+        name: menu
+        required: true
+        schema:
+          $ref: '#/definitions/library_service.BorrowerUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BorrowerRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Menu item not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update borrower item
+      tags:
+      - Borrower
+  /borrowers/overdue_book:
+    get:
+      consumes:
+      - application/json
+      description: Get overdue book items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BorrowerGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get overdue book items
+      tags:
+      - Borrower
+  /genres:
+    get:
+      consumes:
+      - application/json
+      description: Get all genre items
+      parameters:
+      - description: Name
+        in: query
+        name: name
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.GenreGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all genre items
+      tags:
+      - Genre
+    post:
+      consumes:
+      - application/json
+      description: Create a new genre item
+      parameters:
+      - description: Genre data
+        in: body
+        name: genre
+        required: true
+        schema:
+          $ref: '#/definitions/library_service.GenreCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.GenreRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create genre item
+      tags:
+      - Genre
+  /genres/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an genre item by ID
+      parameters:
+      - description: Genre ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Genre item deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid menu item ID
+          schema:
+            type: string
+        "404":
+          description: Menu item not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete menu genre
+      tags:
+      - Genre
+    get:
+      consumes:
+      - application/json
+      description: Get an genre item by ID
+      parameters:
+      - description: Genre ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.GenreRes'
+        "400":
+          description: Invalid menu item ID
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get genre item
+      tags:
+      - Genre
+    put:
+      consumes:
+      - application/json
+      description: Update an existing genre item
+      parameters:
+      - description: Genre ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated genre item data
+        in: body
+        name: menu
+        required: true
+        schema:
+          $ref: '#/definitions/library_service.GenreCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.GenreRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Menu item not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update genre item
+      tags:
+      - Genre
+  /users/{user_id}/borrowed_books:
+    get:
+      consumes:
+      - application/json
+      description: Get all borrowed books
+      parameters:
+      - description: user_id
+        in: query
+        name: user_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BorrowedBooksRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all borrowed books
+      tags:
+      - User
+  /users/{user_id}/borrowing_history:
+    get:
+      consumes:
+      - application/json
+      description: Get all borrowed books history
+      parameters:
+      - description: user_id
+        in: query
+        name: user_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.BorrowedBooksRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all borrowed books history
+      tags:
+      - User
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

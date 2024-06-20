@@ -1,0 +1,202 @@
+definitions:
+  library_service.AuthorCreateReq:
+    properties:
+      biography:
+        type: string
+      name:
+        type: string
+    type: object
+  library_service.AuthorGetAllRes:
+    properties:
+      Authors:
+        items:
+          $ref: '#/definitions/library_service.AuthorRes'
+        type: array
+    type: object
+  library_service.AuthorRes:
+    properties:
+      biography:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /authors:
+    get:
+      consumes:
+      - application/json
+      description: Get all author items
+      parameters:
+      - description: Name
+        in: query
+        name: name
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.AuthorGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all author items
+      tags:
+      - Author
+    post:
+      consumes:
+      - application/json
+      description: Create a new author item
+      parameters:
+      - description: Author data
+        in: body
+        name: author
+        required: true
+        schema:
+          $ref: '#/definitions/library_service.AuthorCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.AuthorRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create author item
+      tags:
+      - Author
+  /authors/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an author item by ID
+      parameters:
+      - description: Author ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Author item deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid menu item ID
+          schema:
+            type: string
+        "404":
+          description: Menu item not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete menu author
+      tags:
+      - Author
+    get:
+      consumes:
+      - application/json
+      description: Get an author item by ID
+      parameters:
+      - description: Author ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.AuthorRes'
+        "400":
+          description: Invalid menu item ID
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get author item
+      tags:
+      - Author
+    put:
+      consumes:
+      - application/json
+      description: Update an existing author item
+      parameters:
+      - description: Author ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated author item data
+        in: body
+        name: menu
+        required: true
+        schema:
+          $ref: '#/definitions/library_service.AuthorCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/library_service.AuthorRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Menu item not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update author item
+      tags:
+      - Author
+swagger: "2.0"
